@@ -1,11 +1,9 @@
 package bitxon.ktor.db.factory
 
-import bitxon.ktor.db.model.AccountTable
 import com.zaxxer.hikari.HikariDataSource
 import io.ktor.server.config.*
+import org.flywaydb.core.Flyway
 import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils
-import org.jetbrains.exposed.sql.transactions.transaction
 
 object DatabaseFactory {
 
@@ -17,11 +15,9 @@ object DatabaseFactory {
         }
 
         val datasource = hikari(dbConfig)
-        val database = Database.connect(datasource)
 
-        transaction(database) {
-            SchemaUtils.create(AccountTable)
-        }
+        Flyway.configure().dataSource(datasource).load().migrate()
+        Database.connect(datasource)
     }
 
     private fun hikari(config: ApplicationConfig) = HikariDataSource().apply {
@@ -29,6 +25,7 @@ object DatabaseFactory {
         username = config.property("user").getString()
         password = config.property("password").getString()
         driverClassName = config.property("driver").getString()
+        schema = config.propertyOrNull("schema")?.getString()
         maximumPoolSize = config.propertyOrNull("maxPoolSize")?.getString()?.toInt() ?: 5
         validate()
     }
