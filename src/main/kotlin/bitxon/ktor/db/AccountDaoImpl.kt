@@ -16,7 +16,8 @@ class AccountDaoImpl : AccountDao {
     }
 
     override suspend fun getById(id: Long): Account? = dbQuery {
-        AccountTable.select { AccountTable.id eq id }
+        AccountTable.selectAll()
+            .where { AccountTable.id eq id }
             .map(::mapRowToAccount)
             .singleOrNull()
     }
@@ -38,7 +39,7 @@ class AccountDaoImpl : AccountDao {
     }
 
     private fun mapRowToAccount(row: ResultRow) = Account(
-        id = row[AccountTable.id],
+        id = row[AccountTable.id].value,
         email = row[AccountTable.email],
         firstName = row[AccountTable.firstName],
         lastName = row[AccountTable.lastName],
