@@ -9,4 +9,6 @@ interface AccountDao {
     suspend fun getById(id: Long): Account?
 
     suspend fun create(account: Account): Account?
+
+    suspend fun update(account: Account): Int
 }

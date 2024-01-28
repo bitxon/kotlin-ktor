@@ -1,7 +1,10 @@
 package bitxon.ktor.plugins
 
 import bitxon.ktor.api.model.Account
+import bitxon.ktor.api.model.Transfer
 import bitxon.ktor.service.AccountService
+import io.ktor.http.*
+import io.ktor.http.content.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
 import io.ktor.server.response.*
@@ -29,6 +32,13 @@ fun Application.configureRouting() {
                 val account = call.receive<Account>()
                 val result = accountService.create(account)
                 call.respond(result)
+            }
+
+            post("/transfers") {
+                val transfer = call.receive<Transfer>()
+                val dirtyTrick = call.request.headers["Dirty-Trick-Header"]
+                accountService.transfer(transfer, dirtyTrick)
+                call.respond(status = HttpStatusCode.NoContent, message = NullBody)
             }
         }
     }

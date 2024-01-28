@@ -6,7 +6,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.datetime.toJavaLocalDate
 import kotlinx.datetime.toKotlinLocalDate
 import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
+import org.jetbrains.exposed.sql.transactions.TransactionManager
+import org.jetbrains.exposed.sql.transactions.experimental.*
 
 class AccountDaoImpl : AccountDao {
 
@@ -33,9 +34,22 @@ class AccountDaoImpl : AccountDao {
         }.resultedValues?.singleOrNull()?.let(::mapRowToAccount)
     }
 
+    override suspend fun update(account: Account): Int = dbQuery {
+        //log.debug("Transaction id: ${TransactionManager.currentOrNull()?.id} - UpdateById: ${account.id}")
+        AccountTable.update({ AccountTable.id eq account.id }) {
+            it[email] = account.email
+            it[firstName] = account.firstName
+            it[lastName] = account.lastName
+            it[dateOfBirth] = account.dateOfBirth.toJavaLocalDate()
+            it[currency] = account.currency
+            it[moneyAmount] = account.moneyAmount
+        }
+    }
 
     private suspend fun <T> dbQuery(block: suspend () -> T): T {
-        return newSuspendedTransaction(Dispatchers.IO) { block() }
+        return TransactionManager.currentOrNull()
+            ?.withSuspendTransaction(Dispatchers.IO) { block() }
+            ?: newSuspendedTransaction(Dispatchers.IO) { block() }
     }
 
     private fun mapRowToAccount(row: ResultRow) = Account(
