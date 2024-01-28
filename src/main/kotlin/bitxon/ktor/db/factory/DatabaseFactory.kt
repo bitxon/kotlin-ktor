@@ -27,6 +27,8 @@ object DatabaseFactory {
         driverClassName = config.property("driver").getString()
         schema = config.propertyOrNull("schema")?.getString()
         maximumPoolSize = config.propertyOrNull("maxPoolSize")?.getString()?.toInt() ?: 5
+        isAutoCommit = false
+        transactionIsolation = "TRANSACTION_REPEATABLE_READ"
         validate()
     }
 
