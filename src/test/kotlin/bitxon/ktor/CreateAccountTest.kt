@@ -11,7 +11,7 @@ import kotlinx.datetime.LocalDate
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.Test
 
-class ApplicationTest {
+class CreateAccountTest {
 
     @Test
     fun createAccount() = testApplication {
@@ -45,51 +45,5 @@ class ApplicationTest {
             .usingRecursiveComparison()
             .ignoringFields("id")
             .isEqualTo(accountToCreate)
-    }
-
-    @Test
-    fun getAll() = testApplication {
-        // config
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
-
-        // when
-        val response = client.get("/accounts");
-
-        // then
-        assertThat(response.status).isEqualTo(HttpStatusCode.OK)
-        assertThat(response.body<List<Account>>()).isNotNull() // TODO assert some entities in future
-    }
-
-    @Test
-    fun getByIdNotFound() = testApplication {
-        // config
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
-
-        // when
-        val response = client.get("/accounts/{id}") {
-            parameter("id", -1)
-        };
-
-        // then
-        assertThat(response.status).isEqualTo(HttpStatusCode.NotFound)
-    }
-
-
-    @Test
-    fun invalidRoute() = testApplication {
-
-        // when
-        val response = client.get("/invalid-resource");
-
-        // then
-        assertThat(response.status).isEqualTo(HttpStatusCode.NotFound)
     }
 }
