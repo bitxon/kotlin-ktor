@@ -19,7 +19,8 @@ fun Application.configureLogging() {
 
 
     environment.monitor.subscribe(ApplicationStarted) { application ->
-        application.environment.log.info("Application is started")
+        val env = application.environment.config.property("ktor.environment").getString();
+        application.environment.log.info("Application is started on '$env' environment")
     }
     environment.monitor.subscribe(ApplicationStopped) { application ->
         application.environment.log.info("Application is stopped")

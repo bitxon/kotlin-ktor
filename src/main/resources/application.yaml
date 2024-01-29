@@ -1,0 +1,24 @@
+ktor:
+  deployment:
+    port: "$PORT:8080"
+  application:
+    modules:
+      - bitxon.ktor.ApplicationKt.module
+
+  environment: "$ENV:local"
+
+  local:
+    db:
+      url: "jdbc:h2:mem:test2;DB_CLOSE_DELAY=-1"
+      user: "root"
+      password: ""
+      driver: "org.h2.Driver"
+
+  dev:
+    db:
+      url: "jdbc:postgresql://localhost:5432/postgres"
+      user: "postgres"
+      password: "postgres"
+      driver: "org.postgresql.Driver"
+      schema: "public"
+      maxPoolSize: 5

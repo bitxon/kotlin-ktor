@@ -36,6 +36,7 @@ dependencies {
     // Ktor
     implementation("io.ktor:ktor-server-core")
     implementation("io.ktor:ktor-server-netty")
+    implementation("io.ktor:ktor-server-config-yaml")
     implementation("io.ktor:ktor-server-call-logging")
     implementation("io.ktor:ktor-server-host-common")
     implementation("io.ktor:ktor-server-status-pages")

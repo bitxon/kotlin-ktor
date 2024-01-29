@@ -2,17 +2,17 @@
 
 ## Run application
 
-Run application in development mode (embedded h2 database)
+Run application with embedded h2 database
 ```shell
 ./gradlew run
 ```
 
-Run application in production mode (postgres database)
+Run application with postgres database
 ```shell
 docker-compose up -d
 ```
 ```shell
-DEVELOPMENT=false ./gradlew run
+ENV=dev ./gradlew run
 ```
 
 ## Test application
