@@ -9,8 +9,21 @@ import io.ktor.serialization.kotlinx.json.*
 import io.ktor.server.testing.*
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.Test
+import kotlinx.datetime.LocalDate
 
 class GetAccountTest {
+
+    companion object {
+        private val ACCOUNT_1 = Account(
+            id = 1,
+            email = "alice@mail.com",
+            firstName = "Alice",
+            lastName = "Anderson",
+            dateOfBirth = LocalDate(1991, 1, 21),
+            currency = "USD",
+            moneyAmount = 340
+        )
+    }
 
     @Test
     fun getAll() = testApplication {
@@ -26,7 +39,26 @@ class GetAccountTest {
 
         // then
         assertThat(response.status).isEqualTo(HttpStatusCode.OK)
-        assertThat(response.body<List<Account>>()).isNotNull() // TODO assert some entities in future
+        assertThat(response.body<List<Account>>()).isNotEmpty().contains(ACCOUNT_1)
+    }
+
+    @Test
+    fun getById() = testApplication {
+        // config
+        val client = createClient {
+            install(ContentNegotiation) {
+                json()
+            }
+        }
+
+        // when
+        val response = client.get("/accounts/${ACCOUNT_1.id}")
+
+        // then
+        assertThat(response.status).isEqualTo(HttpStatusCode.OK)
+        assertThat(response.body<Account>())
+            .usingRecursiveComparison()
+            .isEqualTo(ACCOUNT_1)
     }
 
     @Test
