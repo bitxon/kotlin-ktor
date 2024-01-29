@@ -5,11 +5,11 @@ import bitxon.ktor.api.model.Transfer
 
 interface AccountService {
 
-    suspend fun getAll(): List<Account>
+    fun getAll(): List<Account>
 
-    suspend fun getById(id: Long): Account
+    fun getById(id: Long): Account
 
-    suspend fun create(account: Account): Account
+    fun create(account: Account): Account
 
-    suspend fun transfer(transfer: Transfer, dirtyTrick: String?)
+    fun transfer(transfer: Transfer, dirtyTrick: String?)
 }
