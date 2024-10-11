@@ -1,7 +1,7 @@
 package bitxon.ktor.plugins
 
 import io.ktor.server.application.*
-import io.ktor.server.plugins.callloging.*
+import io.ktor.server.plugins.calllogging.*
 import io.ktor.server.request.*
 import org.slf4j.event.*
 
@@ -18,14 +18,14 @@ fun Application.configureLogging() {
     }
 
 
-    environment.monitor.subscribe(ApplicationStarted) { application ->
+    monitor.subscribe(ApplicationStarted) { application ->
         val env = application.environment.config.property("ktor.environment").getString();
         application.environment.log.info("Application is started on '$env' environment")
     }
-    environment.monitor.subscribe(ApplicationStopped) { application ->
+    monitor.subscribe(ApplicationStopped) { application ->
         application.environment.log.info("Application is stopped")
         // Release resources and unsubscribe from events
-        application.environment.monitor.unsubscribe(ApplicationStarted) {}
-        application.environment.monitor.unsubscribe(ApplicationStopped) {}
+        monitor.unsubscribe(ApplicationStarted) {}
+        monitor.unsubscribe(ApplicationStopped) {}
     }
 }

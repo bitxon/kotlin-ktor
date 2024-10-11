@@ -9,7 +9,7 @@ Run application with embedded h2 database
 
 Run application with postgres database
 ```shell
-docker-compose up -d
+docker compose up -d
 ```
 ```shell
 ENV=dev ./gradlew run

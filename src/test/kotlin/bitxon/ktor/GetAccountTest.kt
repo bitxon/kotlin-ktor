@@ -6,6 +6,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import org.assertj.core.api.Assertions.assertThat
 import kotlin.test.Test
@@ -28,11 +29,8 @@ class GetAccountTest {
     @Test
     fun getAll() = testApplication {
         // config
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        environment { config = ApplicationConfig("application.yaml") }
+        val client = createClient { install(ContentNegotiation) { json() } }
 
         // when
         val response = client.get("/accounts");
@@ -45,11 +43,8 @@ class GetAccountTest {
     @Test
     fun getById() = testApplication {
         // config
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        environment { config = ApplicationConfig("application.yaml") }
+        val client = createClient { install(ContentNegotiation) { json() } }
 
         // when
         val response = client.get("/accounts/${ACCOUNT_1.id}")
@@ -64,11 +59,8 @@ class GetAccountTest {
     @Test
     fun getByIdNotFound() = testApplication {
         // config
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        environment { config = ApplicationConfig("application.yaml") }
+        val client = createClient { install(ContentNegotiation) { json() } }
 
         // when
         val response = client.get("/accounts/{id}") {
@@ -82,6 +74,9 @@ class GetAccountTest {
 
     @Test
     fun invalidRoute() = testApplication {
+        // config
+        environment { config = ApplicationConfig("application.yaml") }
+        val client = createClient { install(ContentNegotiation) { json() } }
 
         // when
         val response = client.get("/invalid-resource");

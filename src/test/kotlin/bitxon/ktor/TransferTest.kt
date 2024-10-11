@@ -7,6 +7,7 @@ import io.ktor.client.plugins.contentnegotiation.*
 import io.ktor.client.request.*
 import io.ktor.http.*
 import io.ktor.serialization.kotlinx.json.*
+import io.ktor.server.config.*
 import io.ktor.server.testing.*
 import kotlinx.datetime.LocalDate
 import org.assertj.core.api.Assertions.assertThat
@@ -17,11 +18,8 @@ class TransferTest {
     @Test
     fun transfer() = testApplication {
         // config
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        environment { config = ApplicationConfig("application.yaml") }
+        val client = createClient { install(ContentNegotiation) { json() } }
 
         // given
         val senderMoneyAmount = 79
@@ -79,11 +77,8 @@ class TransferTest {
     @Test
     fun transferWithDirtyTrick() = testApplication {
         // config
-        val client = createClient {
-            install(ContentNegotiation) {
-                json()
-            }
-        }
+        environment { config = ApplicationConfig("application.yaml") }
+        val client = createClient { install(ContentNegotiation) { json() } }
 
         // given
         val senderMoneyAmount = 79
